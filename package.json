@@ -1,0 +1,15 @@
+{
+  "name": "sunfront",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sun.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "moment": "^2.24.0",
+    "suncalc": "^1.8.0"
+  }
+}
