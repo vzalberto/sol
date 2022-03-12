@@ -333,11 +333,18 @@ navigator.geolocation.getCurrentPosition((position) => {
 	console.log(position)
 	// document.getElementById('latlng').innerText = `${position.coords.latitude}, ${position.coords.longitude}`;
 	//now = new Date('Sat Aug 31 2019 19:23:45 GMT-0500 (hora de verano central)');
-	sunTimes = SunCalc.getTimes(now, position.coords.latitude, position.coords.longitude);
-	sunPosition = SunCalc.getPosition(now, position.coords.latitude, position.coords.longitude);
+
+	sunTimes = SunCalc.getTimes( now, position.coords.latitude, position.coords.longitude);
+	sunPosition = SunCalc.getPosition( now, position.coords.latitude, position.coords.longitude);
+    moonPosition = SunCalc.getMoonPosition( now, position.coords.latitude, position.coords.longitude)
+    moonTimes = SunCalc.getMoonTimes( now, position.coords.latitude, position.coords.longitude)
+    moonIllumination = SunCalc.getMoonIllumination( now, position.coords.latitude, position.coords.longitude)
 
 	console.log(sunTimes);
-	console.log(sunPosition)
+	console.log(sunPosition);
+
+	console.log('moon ', moonPosition)
+    console.log('moonTimes ', moonTimes)
 
     const formatDate = (date) => `${date.getHours()<10 ? '0' :''}${date.getHours()}:${date.getMinutes()<10 ? '0' :''}${date.getMinutes()}`;
     document.getElementById('nightEnd').innerText = `night end: ${formatDate(sunTimes.nightEnd)}`;
@@ -351,6 +358,11 @@ navigator.geolocation.getCurrentPosition((position) => {
     document.getElementById('dusk').innerText = `dusk: ${formatDate(sunTimes.dusk)}`;
     document.getElementById('nauticalDusk').innerText = `nautical dusk: ${formatDate(sunTimes.nauticalDusk)}`;
     document.getElementById('night').innerText = `night: ${formatDate(sunTimes.night)}`;
+
+    document.getElementById('moonrise').innerText = `moonrise: ${formatDate(moonTimes.rise)}`;
+    document.getElementById('moonset').innerText = `moonset: ${formatDate(moonTimes.set)}`;
+    document.getElementById('altitude').innerText = `altitude: ${(moonPosition.altitude)}`;
+    document.getElementById('phase').innerText = `phase : ${(moonIllumination.phase)}`;
 
 	var opts = {
 	  angle: 0, // The span of the gauge arc
@@ -391,6 +403,13 @@ navigator.geolocation.getCurrentPosition((position) => {
 	gauge.setMinValue(sunTimes.nightEnd.getTime());  // Prefer setter over gauge.minValue = 0
 	gauge.animationSpeed = 32; // set animation speed (32 is default value)
 	gauge.set(now.getTime()); // set actual value
+
+    // var target2 = document.getElementById('moon'); // your canvas element
+	// var gauge2 = new Gauge(target2).setOptions(opts); // create sexy gauge!
+	// gauge2.maxValue = moonTimes.set.getTime(); // set max gauge value
+	// gauge2.setMinValue(moonTimes.rise.getTime());  // Prefer setter over gauge.minValue = 0
+	// gauge2.animationSpeed = 32; // set animation speed (32 is default value)
+	// gauge2.set(now.getTime()); // set actual value
 
 	// const illoRotation = now > sunTimes.solarNoon ? { z: sunPosition.altitude, y: Zdog.TAU/2 } : { z: sunPosition.altitude } 
 	// 	let illo = new Zdog.Illustration({
