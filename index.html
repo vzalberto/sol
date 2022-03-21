@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 </head>
 <style>
-	#info p {
+	#info p, #moon p {
 		font-family: Verdana, Geneva, Tahoma, sans-serif;
 	}
 	#container {
@@ -17,6 +17,10 @@
 
 	#foo {
 		background-color: #666;
+	}
+
+	#moonCanvas {
+		transform: scaleX(-1);
 	}
 </style>
 <body>
@@ -29,7 +33,7 @@
 			<p id="phase"></p>
 		</div>
 		
-		<canvas id="foo" width="800" height="240"></canvas>
+		<canvas id="foo" width="600" height="240"></canvas>
 
 		<div id="info">
 			<p id="nightEnd"></p>
@@ -47,8 +51,7 @@
 
 	</div>
 
-		
-	<canvas id="moon" width="800" height="240"></canvas>
+	<canvas id="moonCanvas" width="600" height="240"></canvas>
 
 	<script src="https://unpkg.com/zdog@1/dist/zdog.dist.min.js"></script> 	
  	<script src="./gauge.min.js"></script>
