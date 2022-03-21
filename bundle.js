@@ -402,7 +402,37 @@ navigator.geolocation.getCurrentPosition((position) => {
           gauge.set(now.getTime()); // set actual value
     }
     else {
-        target.remove()
+        var opts = {
+            angle: 0, // The span of the gauge arc
+            lineWidth: 0.44, // The line thickness
+            radiusScale: 1, // Relative radius
+            pointer: {
+              length: 0.6, // // Relative to gauge radius
+              strokeWidth: 0.035, // The thickness
+              color: '#000000' // Fill color
+            },
+            limitMax: false,     // If false, max value increases automatically if value > maxValue
+            limitMin: false,     // If true, the min value of the gauge will be fixed
+            colorStart: '#6FADCF',   // Colors
+            colorStop: '#8FC0DA',    // just experiment with them
+            strokeColor: '#E0E0E0',  // to see which ones work best for you
+            generateGradient: true,
+            highDpiSupport: true,     // High resolution support
+      
+              staticZones: [
+                 {strokeStyle: astro, min: sunTimes.nightEnd.getTime(), max:  sunTimes.night.getTime()}, // Yellow
+
+              ],
+            
+          };
+           // your canvas element
+          var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
+          gauge.maxValue = sunTimes.nightEnd.getTime(); // set max gauge value
+          gauge.setMinValue(sunTimes.night.getTime());  // Prefer setter over gauge.minValue = 0
+          gauge.animationSpeed = 32; // set animation speed (32 is default value)
+          gauge.set(now.getTime()); // set actual value
+          target.setAttribute("style", 'transform:scaleX(-1)')
+          target.setAttribute("style", 'transform:scaleY(-1)')
     }
 
     if (true) {
@@ -437,13 +467,6 @@ navigator.geolocation.getCurrentPosition((position) => {
           moongauge.animationSpeed = 32; 
           moongauge.set(now.getTime());
     }
-
-    // var target2 = document.getElementById('moon'); // your canvas element
-	// var gauge2 = new Gauge(target2).setOptions(opts); // create sexy gauge!
-	// gauge2.maxValue = moonTimes.set.getTime(); // set max gauge value
-	// gauge2.setMinValue(moonTimes.rise.getTime());  // Prefer setter over gauge.minValue = 0
-	// gauge2.animationSpeed = 32; // set animation speed (32 is default value)
-	// gauge2.set(now.getTime()); // set actual value
 
 	// const illoRotation = now > sunTimes.solarNoon ? { z: sunPosition.altitude, y: Zdog.TAU/2 } : { z: sunPosition.altitude } 
 	// 	let illo = new Zdog.Illustration({
