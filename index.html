@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>🌞</title>
+	<title>🌞⽉</title>
 	<link href="sunstyle.css" rel="stylesheet">
 	<meta charset="utf-8">
 </head>
@@ -15,10 +15,6 @@
 		justify-content: space-evenly;
 	}
 
-	#foo {
-		background-color: #666;
-	}
-
 	#moonCanvas {
 		transform: scaleX(-1);
 	}
@@ -26,14 +22,8 @@
 <body>
 
 	<div id="container">
-		<div id="moon">
-			<p id="moonrise"></p>
-			<p id="moonset"></p>
-			<p id="altitude"></p>
-			<p id="phase"></p>
-		</div>
 		
-		<canvas id="foo" width="600" height="240"></canvas>
+		<canvas id="foo" width="800" height="240"></canvas>
 
 		<div id="info">
 			<p id="nightEnd"></p>
@@ -51,7 +41,15 @@
 
 	</div>
 
-	<canvas id="moonCanvas" width="600" height="240"></canvas>
+	<div id="container">
+		<div id="moon">
+			<p id="moonrise"></p>
+			<p id="moonset"></p>
+			<p id="altitude"></p>
+			<p id="phase"></p>
+		</div>
+		<canvas id="moonCanvas" width="600" height="240"></canvas>
+	</div>
 
 	<script src="https://unpkg.com/zdog@1/dist/zdog.dist.min.js"></script> 	
  	<script src="./gauge.min.js"></script>
