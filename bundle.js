@@ -321,9 +321,6 @@ const golden = "#ff69b4"
 const noon = "#84cdee"
 const afternoon = "#84cdee"
 
-var latitude = 20.1225;
-var longitude = -98.736111;
-
 now = new Date();
 //now = new Date(Sat Aug 31 2019 13:36:46 GMT-0500 (hora de verano central));
 
@@ -331,9 +328,7 @@ dateFormat = (date) => {date.getHours() + ":" + date.getMinutes()}
 navigator.geolocation.getCurrentPosition((position) => {
 
 	console.log(position)
-	// document.getElementById('latlng').innerText = `${position.coords.latitude}, ${position.coords.longitude}`;
-	//now = new Date('Sat Aug 31 2019 19:23:45 GMT-0500 (hora de verano central)');
-
+    
 	sunTimes = SunCalc.getTimes( now, position.coords.latitude, position.coords.longitude);
 	sunPosition = SunCalc.getPosition( now, position.coords.latitude, position.coords.longitude);
     moonPosition = SunCalc.getMoonPosition( now, position.coords.latitude, position.coords.longitude)
@@ -361,48 +356,87 @@ navigator.geolocation.getCurrentPosition((position) => {
 
     document.getElementById('moonrise').innerText = `moonrise: ${formatDate(moonTimes.rise)}`;
     document.getElementById('moonset').innerText = `moonset: ${formatDate(moonTimes.set)}`;
-    document.getElementById('altitude').innerText = `altitude: ${(moonPosition.altitude)}`;
-    document.getElementById('phase').innerText = `phase : ${(moonIllumination.phase)}`;
+    document.getElementById('altitude').innerText = `altitude: ${(moonPosition.altitude).toFixed(2)}`;
+    document.getElementById('phase').innerText = `phase : ${(moonIllumination.phase).toFixed(2)}`;
+    const isNight = now > sunTimes.night.getTime()
+    var target = document.getElementById('foo');
+    if (!isNight) {
+        var opts = {
+            angle: 0, // The span of the gauge arc
+            lineWidth: 0.44, // The line thickness
+            radiusScale: 1, // Relative radius
+            pointer: {
+              length: 0.6, // // Relative to gauge radius
+              strokeWidth: 0.035, // The thickness
+              color: '#000000' // Fill color
+            },
+            limitMax: false,     // If false, max value increases automatically if value > maxValue
+            limitMin: false,     // If true, the min value of the gauge will be fixed
+            colorStart: '#6FADCF',   // Colors
+            colorStop: '#8FC0DA',    // just experiment with them
+            strokeColor: '#E0E0E0',  // to see which ones work best for you
+            generateGradient: true,
+            highDpiSupport: true,     // High resolution support
+      
+              staticZones: [
+                 {strokeStyle: astro, min: sunTimes.nightEnd.getTime(), max: sunTimes.nauticalDawn.getTime()}, // Yellow
+                 {strokeStyle: nautical, min: sunTimes.nauticalDawn.getTime(), max: sunTimes.dawn.getTime()}, // Yellow
+                 {strokeStyle: civil, min: sunTimes.dawn.getTime(), max: sunTimes.sunrise.getTime()},
+                 {strokeStyle: sun, min: sunTimes.sunrise.getTime(), max: sunTimes.sunriseEnd.getTime()}, // Green
+                 {strokeStyle: golden, min: sunTimes.sunriseEnd.getTime(), max: sunTimes.goldenHourEnd.getTime()}, // Yellow
+                 {strokeStyle: noon, min: sunTimes.goldenHourEnd.getTime(), max: sunTimes.solarNoon.getTime()},  // Red
+                 {strokeStyle: afternoon, min: sunTimes.solarNoon.getTime(), max: sunTimes.goldenHour.getTime()},
+                 {strokeStyle: golden, min: sunTimes.goldenHour.getTime(), max: sunTimes.sunsetStart.getTime()},
+                 {strokeStyle: sun, min: sunTimes.sunsetStart.getTime(), max: sunTimes.sunset.getTime()},
+                 {strokeStyle: civil, min: sunTimes.sunset.getTime(), max: sunTimes.dusk.getTime()},
+                 {strokeStyle: nautical, min: sunTimes.dusk.getTime(), max: sunTimes.nauticalDusk.getTime()},
+                 {strokeStyle: astro, min: sunTimes.nauticalDusk.getTime(), max: sunTimes.night.getTime()},
+              ],
+            
+          };
+           // your canvas element
+          var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
+          gauge.maxValue = sunTimes.night.getTime(); // set max gauge value
+          gauge.setMinValue(sunTimes.nightEnd.getTime());  // Prefer setter over gauge.minValue = 0
+          gauge.animationSpeed = 32; // set animation speed (32 is default value)
+          gauge.set(now.getTime()); // set actual value
+    }
+    else {
+        target.remove()
+    }
 
-	var opts = {
-	  angle: 0, // The span of the gauge arc
-	  lineWidth: 0.44, // The line thickness
-	  radiusScale: 1, // Relative radius
-	  pointer: {
-	    length: 0.6, // // Relative to gauge radius
-	    strokeWidth: 0.035, // The thickness
-	    color: '#000000' // Fill color
-	  },
-	  limitMax: false,     // If false, max value increases automatically if value > maxValue
-	  limitMin: false,     // If true, the min value of the gauge will be fixed
-	  colorStart: '#6FADCF',   // Colors
-	  colorStop: '#8FC0DA',    // just experiment with them
-	  strokeColor: '#E0E0E0',  // to see which ones work best for you
-	  generateGradient: true,
-	  highDpiSupport: true,     // High resolution support
+    if (true) {
+        var moon = document.getElementById('moonCanvas');
+        var moonOpts = {
+            angle: 0, // The span of the gauge arc
+            lineWidth: 0.44, // The line thickness
+            radiusScale: 1, // Relative radius
+            pointer: {
+              length: 0.6, // // Relative to gauge radius
+              strokeWidth: 0.035, // The thickness
+              color: '#000000' // Fill color
+            },
+            limitMax: false,     // If false, max value increases automatically if value > maxValue
+            limitMin: false,     // If true, the min value of the gauge will be fixed
+            colorStart: '#6FADCF',   // Colors
+            colorStop: '#8FC0DA',    // just experiment with them
+            strokeColor: '#E0E0E0',  // to see which ones work best for you
+            generateGradient: true,
+            highDpiSupport: true,     // High resolution support
+      
+              staticZones: [
+                 {strokeStyle: nautical, min: moonTimes.set.getTime(), max: moonTimes.rise.getTime()}, // Yellow
+              ],
+            
+          };
+           // your canvas element
+          var moongauge = new Gauge(moon).setOptions(moonOpts); 
 
-		staticZones: [
-		   {strokeStyle: astro, min: sunTimes.nightEnd.getTime(), max: sunTimes.nauticalDawn.getTime()}, // Yellow
-		   {strokeStyle: nautical, min: sunTimes.nauticalDawn.getTime(), max: sunTimes.dawn.getTime()}, // Yellow
-		   {strokeStyle: civil, min: sunTimes.dawn.getTime(), max: sunTimes.sunrise.getTime()},
-		   {strokeStyle: sun, min: sunTimes.sunrise.getTime(), max: sunTimes.sunriseEnd.getTime()}, // Green
-		   {strokeStyle: golden, min: sunTimes.sunriseEnd.getTime(), max: sunTimes.goldenHourEnd.getTime()}, // Yellow
-		   {strokeStyle: noon, min: sunTimes.goldenHourEnd.getTime(), max: sunTimes.solarNoon.getTime()},  // Red
-		   {strokeStyle: afternoon, min: sunTimes.solarNoon.getTime(), max: sunTimes.goldenHour.getTime()},
-		   {strokeStyle: golden, min: sunTimes.goldenHour.getTime(), max: sunTimes.sunsetStart.getTime()},
-		   {strokeStyle: sun, min: sunTimes.sunsetStart.getTime(), max: sunTimes.sunset.getTime()},
-		   {strokeStyle: civil, min: sunTimes.sunset.getTime(), max: sunTimes.dusk.getTime()},
-		   {strokeStyle: nautical, min: sunTimes.dusk.getTime(), max: sunTimes.nauticalDusk.getTime()},
-		   {strokeStyle: astro, min: sunTimes.nauticalDusk.getTime(), max: sunTimes.night.getTime()},
-		],
-	  
-	};
-	var target = document.getElementById('foo'); // your canvas element
-	var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-	gauge.maxValue = sunTimes.night.getTime(); // set max gauge value
-	gauge.setMinValue(sunTimes.nightEnd.getTime());  // Prefer setter over gauge.minValue = 0
-	gauge.animationSpeed = 32; // set animation speed (32 is default value)
-	gauge.set(now.getTime()); // set actual value
+          moongauge.maxValue = moonTimes.set.getTime(); 
+          moongauge.setMinValue(moonTimes.rise.getTime());
+          moongauge.animationSpeed = 32; 
+          moongauge.set(now.getTime());
+    }
 
     // var target2 = document.getElementById('moon'); // your canvas element
 	// var gauge2 = new Gauge(target2).setOptions(opts); // create sexy gauge!
